@@ -15,10 +15,10 @@ $selectedOrder = isset($_POST['order']) ? $_POST['order'] : 'matricula';
 
 $alunos = [];
 if ($selectedTurma) {
-    $queryAlunos = "SELECT A.* FROM aluno A
-                    INNER JOIN desempenho_aluno_turma D ON A.matricula = D.matricula
-                    WHERE D.idturma = :idturma
-                    ORDER BY $selectedOrder";
+    $queryAlunos = "SELECT A.*, D.falta FROM aluno A
+    INNER JOIN desempenho_aluno_turma D ON A.matricula = D.matricula
+    WHERE D.idturma = :idturma
+    ORDER BY $selectedOrder";
     $stmtAlunos = $objAluno->runQuery($queryAlunos);
     $stmtAlunos->bindParam(':idturma', $selectedTurma, PDO::PARAM_INT);
     $stmtAlunos->execute();
@@ -97,7 +97,7 @@ if ($selectedTurma) {
                     echo "<td>{$aluno['telefone']}</td>";
                     echo "<td>{$aluno['email']}</td>";
                     echo "<td>";
-                    echo "<button class='btn btn-primary' onclick='calcularPrevisao(\"{$aluno['matricula']}\", \"{$selectedTurma}\")'>Calcular Previsão</button>";
+                    echo "<button class='btn btn-primary' onclick='calcularPrevisao(\"{$aluno['matricula']}\", \"{$selectedTurma}\", {$aluno['falta']})'>Calcular Previsão</button>";
                     echo "</td>";
                     echo "</tr>";
                 }
@@ -134,15 +134,18 @@ if ($selectedTurma) {
         //     // Adapte a lógica conforme necessário
         //     alert("Calcular previsão para todos os alunos");
         // }
-        function calcularPrevisao(matricula, idTurma) {
-            // Abre o modal
-            $('#myModal').modal('show');
+        function calcularPrevisao(matricula, idTurma, falta) {
+        // Abre o modal
+        $('#myModal').modal('show');
 
-            // Exibe as informações no modal
-            var info = "Matrícula: " + matricula + "<br>Turma: " + idTurma;
-            $('#matricula-turma-info').html(info);
+        // Exibe as informações no modal
+        var info = "Matrícula: " + matricula + "<br>Turma: " + idTurma;
+        $('#matricula-turma-info').html(info);
 
-            // Adicione aqui a lógica para fazer a requisição AJAX se necessário
-            // ...
-        }
+        // Preenche o campo readonly com o valor da falta
+        $('#falta').val(falta);
+
+        // Adicione aqui a lógica para fazer a requisição AJAX se necessário
+        // ...
+    }
     </script>
