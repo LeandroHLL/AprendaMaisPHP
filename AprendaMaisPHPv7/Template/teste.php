@@ -34,10 +34,11 @@ if ($selectedTurma) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alunos</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Remova a linha abaixo, pois o Bootstrap já inclui o jQuery -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 
 <body>
@@ -70,7 +71,7 @@ if ($selectedTurma) {
                 </select>
             </div>
             <button type="submit" class="btn btn-primary mr-2">Filtrar</button>
-            <button type="button" class="btn btn-primary ml-2" onclick="calcularPrevisaoTodos()">Calcular Previsão</button>
+            <!-- <button type="button" class="btn btn-primary ml-2" onclick="calcularPrevisaoTodos()">Calcular Previsão</button> -->
         </form>
         <div class="alert alert-info" role="alert">
             <strong>Total de Alunos:</strong> <?php echo count($alunos); ?>
@@ -100,33 +101,48 @@ if ($selectedTurma) {
                     echo "</td>";
                     echo "</tr>";
                 }
-                
+
                 ?>
             </tbody>
         </table>
     </div>
-    <script>
-    function calcularPrevisaoTodos() {
-        // Adapte a lógica conforme necessário
-        alert("Calcular previsão para todos os alunos");
-    }
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Detalhes do Aluno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="matricula-turma-info"></p>
+                    <label for="falta">Faltas:</label>
+                    <input type="text" id="falta" class="form-control" readonly>
 
-    function calcularPrevisao(matricula, idTurma) {
-        $.ajax({
-            type: "POST",
-            url: "../Controller/previsaoController.php", // Substitua pelo caminho correto para o seu arquivo
-            data: {
-                calcularPrevisao: true,
-                matricula: matricula,
-                turma: idTurma
-            },
-            success: function(response) {
-                // Exiba a resposta onde você quiser, por exemplo, em um alert ou modal
-                alert(response);
-            },
-            error: function() {
-                alert("Erro ao calcular a previsão.");
-            }
-        });
-    }
-</script>
+                    <label for="nota">Expectativa de notas:</label>
+                    <input type="text" id="nota" class="form-control" readonly>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // function calcularPrevisaoTodos() {
+        //     // Adapte a lógica conforme necessário
+        //     alert("Calcular previsão para todos os alunos");
+        // }
+        function calcularPrevisao(matricula, idTurma) {
+            // Abre o modal
+            $('#myModal').modal('show');
+
+            // Exibe as informações no modal
+            var info = "Matrícula: " + matricula + "<br>Turma: " + idTurma;
+            $('#matricula-turma-info').html(info);
+
+            // Adicione aqui a lógica para fazer a requisição AJAX se necessário
+            // ...
+        }
+    </script>
