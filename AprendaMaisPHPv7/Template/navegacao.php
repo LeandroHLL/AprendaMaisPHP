@@ -35,6 +35,9 @@
       <li class="nav-item">
         <a class="nav-link" href="previsao.php">Previsões</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="teste.php">testes</a>
+      </li>
     </ul>
   </div>
 </nav>
