@@ -90,16 +90,17 @@ if ($selectedTurma) {
             <tbody>
                 <?php
                 foreach ($alunos as $aluno) {
-                    echo "<tr>";
+                    echo "<tr id='aluno_{$aluno['matricula']}'>";
                     echo "<td>{$aluno['matricula']}</td>";
                     echo "<td>{$aluno['nome']}</td>";
                     echo "<td>{$aluno['telefone']}</td>";
                     echo "<td>{$aluno['email']}</td>";
                     echo "<td>";
-                    
+                    echo "<button class='btn btn-primary' onclick='calcularPrevisao(\"{$aluno['matricula']}\", \"{$selectedTurma}\")'>Calcular Previsão</button>";
                     echo "</td>";
                     echo "</tr>";
                 }
+                
                 ?>
             </tbody>
         </table>
