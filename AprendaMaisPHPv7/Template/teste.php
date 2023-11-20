@@ -76,7 +76,7 @@ if ($selectedTurma) {
         <div class="alert alert-info" role="alert">
             <strong>Total de Alunos:</strong> <?php echo count($alunos); ?>
         </div>
-
+        <button type="button" class="btn btn-primary" id="calcularPrevisaoBtn">Calcular e Inserir Previsões</button>
         <!-- Tabela de alunos -->
         <table class="table table-striped">
             <thead>
@@ -135,17 +135,64 @@ if ($selectedTurma) {
         //     alert("Calcular previsão para todos os alunos");
         // }
         function calcularPrevisao(matricula, idTurma, falta) {
-        // Abre o modal
-        $('#myModal').modal('show');
+            // Abre o modal
+            $('#myModal').modal('show');
 
-        // Exibe as informações no modal
-        var info = "Matrícula: " + matricula + "<br>Turma: " + idTurma;
-        $('#matricula-turma-info').html(info);
+            // Exibe as informações no modal
+            var info = "Matrícula: " + matricula + "<br>Turma: " + idTurma;
+            $('#matricula-turma-info').html(info);
 
-        // Preenche o campo readonly com o valor da falta
-        $('#falta').val(falta);
+            // Preenche o campo readonly com o valor da falta
+            $('#falta').val(falta);
 
-        // Adicione aqui a lógica para fazer a requisição AJAX se necessário
-        // ...
-    }
+            // Chama a função para calcular a previsão de notas usando AJAX
+            $.ajax({
+                url: '../Model/previsao.php', // Substitua pelo caminho correto
+                type: 'POST',
+                data: {
+                    matricula: matricula,
+                    idTurma: idTurma,
+                    falta: falta
+                },
+                success: function(response) {
+                    // Preenche o campo readonly com o valor da previsão de notas
+                    $('#nota').val(response);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+        $(document).ready(function() {
+            // Adiciona um evento de clique ao botão
+            $("#calcularPrevisaoBtn").click(function() {
+                // Obtém o valor da turma selecionada
+                var selectedTurma = $("#turma").val();
+
+                // Verifica se uma turma foi selecionada
+                if (selectedTurma) {
+                    // Chama a função preverNotas para a turma selecionada
+                    $.ajax({
+                        url: '../Controller/prevercontroller.php', // Substitua pelo caminho correto
+                        type: 'POST',
+                        data: {
+                            idturma: selectedTurma
+                        },
+                        success: function(response) {
+                            // Exibe uma mensagem ou lógica adicional, se necessário
+                            alert('Previsões calculadas e inseridas no banco de dados com sucesso!');
+                            // Recarrega a página para refletir as alterações na tabela
+                            location.reload();
+                        },
+                        error: function(error) {
+                            console.log(error);
+                            // Tratar erros, se necessário
+                            alert('Erro ao calcular e inserir previsões.');
+                        }
+                    });
+                } else {
+                    alert('Selecione uma turma antes de calcular a previsão.');
+                }
+            });
+        });
     </script>

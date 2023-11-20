@@ -117,18 +117,41 @@
 
         // Função para prever notas com base nas faltas usando o modelo ajustado
         public function preverNotas($idturma) {
-            $iddisciplina = self::getDisciplina($idturma);
-            $faltasParaPrever = self::getFaltasNaTurma($idturma);
-            $notas = self::getAllNotas($iddisciplina);
-            $faltas = self::getAllFaltas($iddisciplina);
-            $modelo = self::ajustarRegressaoLinear($faltas, $notas);
-
-            foreach($faltasParaPrever as $falta) {
+            $iddisciplina = $this->getDisciplina($idturma);
+            $faltasParaPrever = $this->getFaltasNaTurma($idturma);
+            $notas = $this->getAllNotas($iddisciplina);
+            $faltas = $this->getAllFaltas($iddisciplina);
+            $modelo = $this->ajustarRegressaoLinear($faltas, $notas);
+        
+            // Inicializa a string de resultados
+            $resultados = "";
+        
+            foreach ($faltasParaPrever as $falta) {
                 $previsaoNotas = $modelo['m'] * $falta + $modelo['b'];
-                echo "Previsão de notas para $falta faltas: " . $previsaoNotas . "\n";
+                $resultados .= "Previsão de notas para $falta faltas: " . $previsaoNotas . "\n";
+        
+                // Insere o resultado no banco de dados
+                $this->inserirPrevisaoNoBanco($idturma, $falta, $previsaoNotas);
             }
+        
+            // Retorna a string de resultados
+            return $resultados;
         }
 
+        private function inserirPrevisaoNoBanco($idturma, $falta, $previsaoNotas) {
+            try {
+                // Atualizado para incluir a coluna previsoes no comando SQL
+                $sql = "UPDATE desempenho_aluno_turma SET previsoes = :previsaoNotas WHERE idturma = :idturma AND falta = :falta";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bindParam(':idturma', $idturma);
+                $stmt->bindParam(':falta', $falta);
+                $stmt->bindParam(':previsaoNotas', $previsaoNotas);
+                $stmt->execute();
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                // Tratar exceção conforme necessário
+            }
+        }
 
 
         public function redirect($url){
