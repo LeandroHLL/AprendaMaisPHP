@@ -15,7 +15,7 @@ $selectedOrder = isset($_POST['order']) ? $_POST['order'] : 'matricula';
 
 $alunos = [];
 if ($selectedTurma) {
-    $queryAlunos = "SELECT A.*, D.falta FROM aluno A
+    $queryAlunos = "SELECT A.*, D.falta, D.previsoes FROM aluno A
     INNER JOIN desempenho_aluno_turma D ON A.matricula = D.matricula
     WHERE D.idturma = :idturma
     ORDER BY $selectedOrder";
@@ -85,7 +85,8 @@ if ($selectedTurma) {
                     <th>Nome</th>
                     <th>Telefone</th>
                     <th>Email</th>
-                    <th>Ações</th>
+                    <th>Faltas</th>
+                    <th>Nota Prevista</th>
                 </tr>
             </thead>
             <tbody>
@@ -96,8 +97,8 @@ if ($selectedTurma) {
                     echo "<td>{$aluno['nome']}</td>";
                     echo "<td>{$aluno['telefone']}</td>";
                     echo "<td>{$aluno['email']}</td>";
-                    echo "<td>";
-                    echo "<button class='btn btn-primary' onclick='calcularPrevisao(\"{$aluno['matricula']}\", \"{$selectedTurma}\", {$aluno['falta']})'>Calcular Previsão</button>";
+                    echo "<td>{$aluno['falta']}</td>";
+                    echo "<td>{$aluno['previsoes']}</td>";
                     echo "</td>";
                     echo "</tr>";
                 }
@@ -106,29 +107,7 @@ if ($selectedTurma) {
             </tbody>
         </table>
     </div>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Detalhes do Aluno</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p id="matricula-turma-info"></p>
-                    <label for="falta">Faltas:</label>
-                    <input type="text" id="falta" class="form-control" readonly>
-
-                    <label for="nota">Expectativa de notas:</label>
-                    <input type="text" id="nota" class="form-control" readonly>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+   
     <script>
         // function calcularPrevisaoTodos() {
         //     // Adapte a lógica conforme necessário
