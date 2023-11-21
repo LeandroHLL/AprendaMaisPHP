@@ -24,9 +24,7 @@ $objProfessores = new Professor();
 </head>
 
 <body>
-  <?php
-  include('navegacao.php');
-  ?>
+<?php include('navegacao.php'); ?>
   <div class="container">
     <h2>Cadastro de Turmas</h2>
     <p class="ml-2">
@@ -38,14 +36,12 @@ $objProfessores = new Professor();
       ?>
       <select name="curso">
         <?php foreach ($objCursos as $objCurso) { ?>
-          <p>echo($objCurso['idcurso']);</p>
-          <option name="txtCurso" value="<?php echo ($objCurso['idcurso']); ?>"><?php echo ($objCurso['nome']); ?></option>
+          <option value="<?php echo $objCurso['idcurso']; ?>"><?php echo $objCurso['nome']; ?></option>
         <?php } ?>
       </select>
     </p>
     <p>
-      <button type="button" class="btn btn-success">
-        <a data-toggle="modal" data-target="#myModalCadastrar">Cadastrar</a></button>
+      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModalCadastrar">Cadastrar</button>
     </p>
     <table class="table table-striped">
       <thead>
