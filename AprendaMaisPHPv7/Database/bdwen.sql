@@ -79,6 +79,7 @@ INSERT INTO turma (nome, idprofessor, iddisciplina, tipodeturma, data_registro, 
 INSERT INTO aluno (matricula, nome, telefone, email) VALUES ('MAT001', 'Nome Aluno 1', '123456789', 'aluno1@example.com');
 INSERT INTO desempenho_aluno_turma (matricula, idturma, nota, falta) VALUES ('MAT001', 1, 8.5, 2);
 
+ALTER TABLE desempenho_aluno_turma ADD COLUMN previsoes DECIMAL(4,2)
 -- ALTER TABLE desempenho_aluno_turma DROP PRIMARY KEY;
 
 -- ALTER TABLE desempenho_aluno_turma DROP INDEX matricula_UNIQUE;
