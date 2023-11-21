@@ -298,8 +298,7 @@ $objProfessores = new Professor();
       modal.find('#recipient-id').val(recipientId);
       modal.find('#recipient-turma').val(recipientTurma)
     });
-  </script>
-  <script>
+
     $('#myModalEditar').on('show.bs.modal', function(event) {
       var button = $(event.relatedTarget);
       var recipientId = button.data('id');
@@ -309,8 +308,7 @@ $objProfessores = new Professor();
       modal.find('#recipient-id').val(recipientId);
       modal.find('#recipient-turma').val(recipientTurma)
     });
-  </script>
-  <script>
+
     $('#myModalImportarDesempenho').on('show.bs.modal', function(event) {
       var button = $(event.relatedTarget);
       var recipientId = button.data('id');
@@ -320,4 +318,5 @@ $objProfessores = new Professor();
       modal.find('#recipient-id').val(recipientId);
       modal.find('#recipient-turma').val(recipientTurma)
     });
+    
   </script>
