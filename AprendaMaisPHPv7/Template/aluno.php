@@ -123,6 +123,7 @@ if ($selectedTurma) {
                         <div class="form-group">
                             <label for="turmaCSV">Selecione a turma:</label>
                             <select name="selectedTurma" class="form-control" id="turmaCSV">
+                                <option value="">Importar Alunos da Instituição</option>
                                 <?php
                                 foreach ($turmas as $turma) {
                                     $selected = ($selectedTurma == $turma['idturma']) ? 'selected' : '';
