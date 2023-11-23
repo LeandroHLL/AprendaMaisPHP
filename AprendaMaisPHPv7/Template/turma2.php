@@ -17,31 +17,36 @@ $objProfessores = new Professor();
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
   <title>Aprenda Mais - Turmas</title>
 </head>
 
 <body>
-<?php include('navegacao.php'); ?>
+  <?php
+  include('navegacao.php');
+  ?>
   <div class="container">
     <h2>Cadastro de Turmas</h2>
     <p class="ml-2">
       <?php
-      $query = "SELECT * FROM curso";
-      $stmt = $objCursos->runQuery($query);
+      $query = "SELECT * FROM disciplina";
+      $stmt = $objDisciplinas->runQuery($query);
       $stmt->execute();
-      $objCursos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $objDisciplinas = $stmt->fetchAll(PDO::FETCH_ASSOC);
       ?>
-      <select name="curso">
-        <?php foreach ($objCursos as $objCurso) { ?>
-          <option value="<?php echo $objCurso['idcurso']; ?>"><?php echo $objCurso['nome']; ?></option>
+      <form action="" method="post">
+    <label for="disciplina">Selecione uma disciplina:</label>
+    <select name="disciplina" id="disciplina" onchange="this.form.submit()">
+        <option value="">Selecione</option>
+        <?php foreach ($objDisciplinas as $objDisciplina) { ?>
+            <option value="<?php echo $objDisciplina['iddisciplina']; ?>" <?php echo isset($_POST['disciplina']) && $_POST['disciplina'] == $objDisciplina['iddisciplina'] ? 'selected' : ''; ?>><?php echo $objDisciplina['nome']; ?></option>
         <?php } ?>
-      </select>
+    </select>
+</form>
+
     </p>
     <p>
-      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModalCadastrar">Cadastrar</button>
+      <button type="button" class="btn btn-success">
+        <a data-toggle="modal" data-target="#myModalCadastrar">Cadastrar</a></button>
     </p>
     <table class="table table-striped">
       <thead>
@@ -57,42 +62,47 @@ $objProfessores = new Professor();
       </thead>
       <tbody>
         <?php
-        $query = "SELECT T.idturma, T.nome AS TURMA, D.nome AS DISCIPLINA, P.nome AS PROFESSOR, COUNT(DAT.matricula) AS QTD_ALUNOS
-       FROM turma AS T
-       INNER JOIN disciplina AS D ON D.iddisciplina = T.iddisciplina
-       INNER JOIN professor AS P ON P.idprofessor = T.idprofessor
-       LEFT JOIN desempenho_aluno_turma AS DAT ON DAT.idturma = T.idturma
-       GROUP BY T.idturma, T.nome, D.nome, P.nome";
+        if (isset($_POST['disciplina']) && !empty($_POST['disciplina'])) {
+          $selectedDisciplinaId = $_POST['disciplina'];
+          $query = "SELECT T.idturma, T.nome AS TURMA, D.nome AS DISCIPLINA, P.nome AS PROFESSOR, COUNT(DAT.matricula) AS QTD_ALUNOS
+          FROM turma AS T
+          INNER JOIN disciplina AS D ON D.iddisciplina = T.iddisciplina
+          INNER JOIN professor AS P ON P.idprofessor = T.idprofessor
+          LEFT JOIN desempenho_aluno_turma AS DAT ON DAT.idturma = T.idturma
+          WHERE T.iddisciplina = :iddisciplina
+          GROUP BY T.idturma, T.nome, D.nome, P.nome";
 
-        $stmt = $objTurma->runQuery($query);
-        $stmt->execute();
-        while ($objTurma = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $stmt = $objTurma->runQuery($query);
+          $stmt->bindParam(':iddisciplina', $selectedDisciplinaId);
+          $stmt->execute();
+
+          while ($objTurma = $stmt->fetch(PDO::FETCH_ASSOC)) {
         ?>
-          <tr>
-            <td><?php echo ($objTurma['TURMA']); ?></td>
-            <td><?php echo ($objTurma['DISCIPLINA']); ?></td>
-            <td><?php echo ($objTurma['PROFESSOR']); ?></td>
-            <td>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalImportarDesempenho" data-id="<?php echo ($objTurma['idturma']); ?>" data-turma="<?php echo ($objTurma['TURMA']); ?>">Importar</button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModalEditar" data-id="<?php echo ($objTurma['idturma']); ?>" data-turma="<?php echo ($objTurma['TURMA']); ?>" data-disciplina="<?php echo ($objTurma['DISCIPLINA']); ?>" data-professor="<?php echo ($objTurma['PROFESSOR']); ?>">Editar</button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalDeletar" data-id="<?php echo ($objTurma['idturma']); ?>" data-turma="<?php echo ($objTurma['TURMA']); ?>">Deletar</button>
-            </td>
-            <td>
-    <?php
-    if ($objTurma['QTD_ALUNOS'] > 0) {
-        echo "Upload realizado" . " 🟢";
-    } else {
-        echo "Upload não realizado" . " 🔴";
-    }
-    ?>
-</td>
-          </tr>
-
+            <tr>
+              <td><?php echo ($objTurma['TURMA']); ?></td>
+              <td><?php echo ($objTurma['DISCIPLINA']); ?></td>
+              <td><?php echo ($objTurma['PROFESSOR']); ?></td>
+              <td>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalImportarDesempenho" data-id="<?php echo ($objTurma['idturma']); ?>" data-turma="<?php echo ($objTurma['TURMA']); ?>">Importar</button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModalEditar" data-id="<?php echo ($objTurma['idturma']); ?>" data-turma="<?php echo ($objTurma['TURMA']); ?>" data-disciplina="<?php echo ($objTurma['DISCIPLINA']); ?>" data-professor="<?php echo ($objTurma['PROFESSOR']); ?>">Editar</button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalDeletar" data-id="<?php echo ($objTurma['idturma']); ?>" data-turma="<?php echo ($objTurma['TURMA']); ?>">Deletar</button>
+              </td>
+              <td>
+                <?php
+                if ($objTurma['QTD_ALUNOS'] > 0) {
+                  echo "Upload realizado" . " 🟢";
+                } else {
+                  echo "Upload não realizado" . " 🔴";
+                }
+                ?>
+              </td>
+            </tr>
         <?php
+          }
         }
         ?>
       </tbody>
@@ -285,38 +295,42 @@ $objProfessores = new Professor();
     </div>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/js/bootstrap.min.js"></script>
 
+<script>
+  // Your JavaScript code remains unchanged
+  $('#myModalDeletar').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var recipientId = button.data('id');
+    var recipientTurma = button.data('turma');
 
+    var modal = $(this);
+    modal.find('#recipient-id').val(recipientId);
+    modal.find('#recipient-turma').val(recipientTurma);
+  });
 
-  <script>
-    $('#myModalDeletar').on('show.bs.modal', function(event) {
-      var button = $(event.relatedTarget);
-      var recipientId = button.data('id');
-      var recipientTurma = button.data('turma');
+  $('#myModalEditar').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var recipientId = button.data('id');
+    var recipientTurma = button.data('turma');
 
-      var modal = $(this);
-      modal.find('#recipient-id').val(recipientId);
-      modal.find('#recipient-turma').val(recipientTurma)
-    });
+    var modal = $(this);
+    modal.find('#recipient-id').val(recipientId);
+    modal.find('#recipient-turma').val(recipientTurma);
+  });
 
-    $('#myModalEditar').on('show.bs.modal', function(event) {
-      var button = $(event.relatedTarget);
-      var recipientId = button.data('id');
-      var recipientTurma = button.data('turma');
+  $('#myModalImportarDesempenho').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var recipientId = button.data('id');
+    var recipientTurma = button.data('turma');
 
-      var modal = $(this);
-      modal.find('#recipient-id').val(recipientId);
-      modal.find('#recipient-turma').val(recipientTurma)
-    });
+    var modal = $(this);
+    modal.find('#recipient-id').val(recipientId);
+    modal.find('#recipient-turma').val(recipientTurma);
+  });
+</script>
+</body>
 
-    $('#myModalImportarDesempenho').on('show.bs.modal', function(event) {
-      var button = $(event.relatedTarget);
-      var recipientId = button.data('id');
-      var recipientTurma = button.data('turma');
-
-      var modal = $(this);
-      modal.find('#recipient-id').val(recipientId);
-      modal.find('#recipient-turma').val(recipientTurma)
-    });
-    
-  </script>
+</html>

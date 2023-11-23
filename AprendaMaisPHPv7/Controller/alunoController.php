@@ -3,7 +3,7 @@ require_once('../Model/aluno.php');
 $objAluno = new Aluno();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csvFile"])) {
-    $selectedTurma = $_POST['selectedTurma'];   
+    $selectedTurma = isset($_POST['selectedTurma']) ? $_POST['selectedTurma'] : null;   
     // Diretório onde os arquivos CSV serão salvos temporariamente, apaga isso aq n
     $targetDir = "uploads/";
     $targetFile = $targetDir . basename($_FILES["csvFile"]["name"]);
@@ -48,14 +48,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csvFile"])) {
                 $result = $stmtCheckMatricula->fetch(PDO::FETCH_ASSOC);
 
                 if ($result['count'] > 0) {
-                    // A matrícula já existe, apenas atualiza a tabela desempenho_aluno_turma
-                    $queryDesempenho = "INSERT INTO desempenho_aluno_turma (matricula, idturma) VALUES (:matricula, :idturma)";
-                    $stmtDesempenho = $objAluno->runQuery($queryDesempenho);
-                    $stmtDesempenho->bindParam(':matricula', $matricula, PDO::PARAM_STR);
-                    $stmtDesempenho->bindParam(':idturma', $selectedTurma, PDO::PARAM_INT);
-                    $stmtDesempenho->execute();
+                    // A matrícula já existe, apenas atualiza a tabela desempenho_aluno_turma se a turma for selecionada
+                    if ($selectedTurma !== null && !empty($selectedTurma)) {
+                        $queryDesempenho = "INSERT INTO desempenho_aluno_turma (matricula, idturma) VALUES (:matricula, :idturma)";
+                        $stmtDesempenho = $objAluno->runQuery($queryDesempenho);
+                        $stmtDesempenho->bindParam(':matricula', $matricula, PDO::PARAM_STR);
+                        $stmtDesempenho->bindParam(':idturma', $selectedTurma, PDO::PARAM_INT);
+                        $stmtDesempenho->execute();
+                    }
                 } else {
-                    // A matrícula não existe, insere na tabela aluno e desempenho_aluno_turma
+                    // A matrícula não existe, insere na tabela aluno e desempenho_aluno_turma se a turma for selecionada
                     $queryInsert = "INSERT INTO aluno (matricula, nome, telefone, email) VALUES (:matricula, :nome, :telefone, :email)";
                     $stmtInsert = $objAluno->runQuery($queryInsert);
                     $stmtInsert->bindParam(':matricula', $matricula, PDO::PARAM_STR);
@@ -64,11 +66,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csvFile"])) {
                     $stmtInsert->bindParam(':email', $email, PDO::PARAM_STR);
                     $stmtInsert->execute();
 
-                    $queryDesempenho = "INSERT INTO desempenho_aluno_turma (matricula, idturma) VALUES (:matricula, :idturma)";
-                    $stmtDesempenho = $objAluno->runQuery($queryDesempenho);
-                    $stmtDesempenho->bindParam(':matricula', $matricula, PDO::PARAM_STR);
-                    $stmtDesempenho->bindParam(':idturma', $selectedTurma, PDO::PARAM_INT);
-                    $stmtDesempenho->execute();
+                    if ($selectedTurma !== null && !empty($selectedTurma)) {
+                        $queryDesempenho = "INSERT INTO desempenho_aluno_turma (matricula, idturma) VALUES (:matricula, :idturma)";
+                        $stmtDesempenho = $objAluno->runQuery($queryDesempenho);
+                        $stmtDesempenho->bindParam(':matricula', $matricula, PDO::PARAM_STR);
+                        $stmtDesempenho->bindParam(':idturma', $selectedTurma, PDO::PARAM_INT);
+                        $stmtDesempenho->execute();
+                    }
                 }
             }
             unlink($targetFile);

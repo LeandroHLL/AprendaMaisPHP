@@ -15,29 +15,42 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Aprenda Mais - Ferramenta de Análise de Dados</title>
+    <title>Aprenda Mais - Disciplinas</title>
 </head>
 <body>
 <?php 
   include('navegacao.php');
 ?>
 <div class="container">
-    <thead></thead>
   <h2 class="">Lista de Disciplinas</h2>
   <p class="ml-2">
-  <?php 
+    <?php 
         $query = "SELECT * FROM curso";
         $stmt = $objCursos->runQuery($query);
         $stmt->execute();
         $objCursos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
-    <select name="curso">
-      <?php foreach ($objCursos as $objCurso) { ?>
-        <p>echo($objCurso['idcurso']);</p>
-        <option name="txtCurso" value="<?php echo($objCurso['idcurso']);?>"><?php echo($objCurso['nome']);?></option>
-      <?php } ?>
-      </select> 
+    <form action="" method="post">
+      <label for="curso">Selecione um curso:</label>
+      <select name="curso" id="curso" onchange="this.form.submit()">
+        <option value="">Selecione</option>
+        <?php foreach ($objCursos as $objCurso) { ?>
+          <option value="<?php echo $objCurso['idcurso']; ?>" <?php echo isset($_POST['curso']) && $_POST['curso'] == $objCurso['idcurso'] ? 'selected' : ''; ?>><?php echo $objCurso['nome']; ?></option>
+        <?php } ?>
+      </select>
+    </form>
   </p>
+
+  <?php
+    if(isset($_POST['curso']) && !empty($_POST['curso'])) {
+      $selectedCursoId = $_POST['curso'];
+      $query = "SELECT * FROM disciplina WHERE idcurso = :idcurso";
+      $stmt = $objDisciplinas->runQuery($query);
+      $stmt->bindParam(':idcurso', $selectedCursoId);
+      $stmt->execute();
+      $objDisciplinas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  ?>
+
   <table class="table table-striped">
     <thead>
       <tr>
@@ -47,34 +60,29 @@
       </tr>
     </thead>
     <tbody>
-    <?php
-        $query = "SELECT * FROM disciplina";
-        $stmt = $objDisciplinas->runQuery($query);
-        $stmt->execute();
-        $objDisciplinas = $stmt->fetchAll(PDO::FETCH_ASSOC);     
-      ?>
-    <?php foreach ($objDisciplinas as $objDisciplina) {?> 
-            <tr>
-              <td><?php echo($objDisciplina['nome']); ?></td>
-              <td>
-                  <button type="button" class="btn btn-warning"
-                  data-toggle="modal" 
-                  data-target="#myModalEditar"
-                  data-id="<?php echo($objDisciplina['iddisciplina']);?>"
-                  data-nome="<?php echo($objDisciplina['nome']);?>"
-                  >Editar</button>
-              </td>
-              <td>
-                  <button type="button" class="btn btn-danger"
-                  data-toggle="modal" data-target="#myModalDeletar" 
-                  data-id="<?php echo($objDisciplina['iddisciplina']);?>"
-                  data-nome="<?php echo($objDisciplina['nome']);?>"
-                  >Deletar</button>
-              </td>
-            </tr>
-            <?php } ?>
+      <?php foreach ($objDisciplinas as $objDisciplina) {?> 
+        <tr>
+          <td><?php echo($objDisciplina['nome']); ?></td>
+          <td>
+            <button type="button" class="btn btn-warning"
+              data-toggle="modal" 
+              data-target="#myModalEditar"
+              data-id="<?php echo($objDisciplina['iddisciplina']);?>"
+              data-nome="<?php echo($objDisciplina['nome']);?>"
+            >Editar</button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger"
+              data-toggle="modal" data-target="#myModalDeletar" 
+              data-id="<?php echo($objDisciplina['iddisciplina']);?>"
+              data-nome="<?php echo($objDisciplina['nome']);?>"
+            >Deletar</button>
+          </td>
+        </tr>
+      <?php } ?>
     </tbody>
   </table>
+  <?php } ?>
 </div>
 
 
