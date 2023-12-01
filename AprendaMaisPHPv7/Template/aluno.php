@@ -14,16 +14,21 @@ $selectedTurma = isset($_POST['turma']) ? $_POST['turma'] : null;
 $selectedOrder = isset($_POST['order']) ? $_POST['order'] : 'matricula';
 
 $alunos = [];
-if ($selectedTurma) {
+if ($selectedTurma && $selectedTurma != 'todos') {
     $queryAlunos = "SELECT A.* FROM aluno A
                     INNER JOIN desempenho_aluno_turma D ON A.matricula = D.matricula
                     WHERE D.idturma = :idturma
                     ORDER BY $selectedOrder";
     $stmtAlunos = $objAluno->runQuery($queryAlunos);
     $stmtAlunos->bindParam(':idturma', $selectedTurma, PDO::PARAM_INT);
-    $stmtAlunos->execute();
-    $alunos = $stmtAlunos->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    // Buscar todos os alunos da instituição
+    $queryAlunos = "SELECT * FROM aluno";
+    $stmtAlunos = $objAluno->runQuery($queryAlunos);
 }
+
+$stmtAlunos->execute();
+$alunos = $stmtAlunos->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -50,6 +55,7 @@ if ($selectedTurma) {
             <div class="form-group mr-2">
                 <label for="turma" class="mr-2">Selecione a turma:</label>
                 <select name="turma" id="turma" class="form-control">
+                    <option value="todos" <?php echo ($selectedTurma == 'todos') ? 'selected' : ''; ?>>Todos os Alunos da Instituição</option>
                     <?php
                     $queryTurmas = "SELECT * FROM turma";
                     $stmtTurmas = $objTurma->runQuery($queryTurmas);

@@ -27,6 +27,12 @@ $objProfessores = new Professor();
 <?php include('navegacao.php'); ?>
   <div class="container">
     <h2>Cadastro de Turmas</h2>
+    <?php
+if (isset($_GET['message'])) {
+    $responseMessage = $_GET['message'];
+    echo '<div class="alert alert-danger">' . $responseMessage . '</div>';
+}
+?>
     <p class="ml-2">
       <?php
       $query = "SELECT * FROM curso";

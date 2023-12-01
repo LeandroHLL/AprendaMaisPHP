@@ -14,20 +14,31 @@
             return $stmt;
         }
 
-        public function insert($nome,$email){
-            try{
-                $sql = "INSERT INTO professor(nome,email)
-                VALUES(:nome,:email)";                
-                $stmt = $this->conn->prepare($sql);
-                $stmt->bindParam(':nome', $nome);
-                $stmt->bindParam(':email', $email);
-                $stmt->execute();
-                return $stmt;
+        public function insert($nome, $email)
+{
+    try {
 
-            }catch(PDOException $e){
-                echo $e->getMessage();
-            }
+        $checkQuery = "SELECT * FROM professor WHERE email = :email";
+        $checkStmt = $this->conn->prepare($checkQuery);
+        $checkStmt->bindParam(':email', $email);
+        $checkStmt->execute();
+
+        if ($checkStmt->rowCount() > 0) {
+
+            return false;
         }
+
+        $sql = "INSERT INTO professor(nome, email) VALUES(:nome, :email)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        return true;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
 
         public function deletar($idprofessor){
             try{

@@ -21,6 +21,12 @@
 ?>
 <div class="container">
   <h2>Lista de Professores</h2>
+  <?php
+if (isset($_GET['message'])) {
+    $responseMessage = $_GET['message'];
+    echo '<div class="alert alert-danger">' . $responseMessage . '</div>';
+}
+?>
   <p>
     <button type="button" class="btn btn-success">
       <a data-toggle="modal" 
