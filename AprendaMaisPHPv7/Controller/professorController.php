@@ -2,11 +2,17 @@
     require_once '../model/professor.php';   
     $objProfessor = new Professor();
 
-    if(isset($_POST['insertProfessor'])){
+    if (isset($_POST['insertProfessor'])) {
         $nome = $_POST['txtNome'];
         $email = $_POST['txtEmail'];
-        if($objProfessor -> insert($nome,$email)){
-            $objProfessor -> redirect('../Template/professor.php');
+    
+        if ($objProfessor->insert($nome, $email)) {
+
+            $objProfessor->redirect('../Template/professor.php');
+        } else {
+
+            $errorMessage = "Erro: Professor ja Cadastrado.";
+            $objProfessor->redirect('../Template/professor.php?message=' . urlencode($errorMessage));
         }
     }
 
