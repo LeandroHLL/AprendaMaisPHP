@@ -1,4 +1,4 @@
 <?php
-header("Location: ./AprendaMaisPHPv7/Template/curso.php");
+header("Location: ./Browser/Template/curso.php");
 exit;
 ?>
