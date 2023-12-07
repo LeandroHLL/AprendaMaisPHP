@@ -71,40 +71,42 @@
 
 
         public function insert($nome, $tipodeturma, $idprofessor, $iddisciplina)
-{
-    try {
-
-        $checkIfExistsQuery = "SELECT COUNT(*) as count FROM turma WHERE nome = :nome AND idprofessor = :idprofessor AND iddisciplina = :iddisciplina";
-        $checkIfExistsStmt = $this->conn->prepare($checkIfExistsQuery);
-        $checkIfExistsStmt->bindParam(':nome', $nome);
-        $checkIfExistsStmt->bindParam(':idprofessor', $idprofessor);
-        $checkIfExistsStmt->bindParam(':iddisciplina', $iddisciplina);
-        $checkIfExistsStmt->execute();
-        $classExists = $checkIfExistsStmt->fetch(PDO::FETCH_ASSOC)['count'] > 0;
-
-        if ($classExists) {
-
-            $errorMessage = "Erro: Turma ja existente.";
-            header("Location: ../Template/turma.php?message=" . urlencode($errorMessage));
-            exit();
-        }
-
+        {
+            try {
+                if (empty($nome)) {
+                    $errorMessage = "Erro: Turma sem nome.";
+                    header("Location: ../Template/turma.php?message=" . urlencode($errorMessage));
+                    exit();
+                }
         
-        $sql = "INSERT INTO turma(iddisciplina, nome, idprofessor, tipodeturma, data_registro)
-                VALUES(:iddisciplina, :nome, :idprofessor, :tipodeturma, now())";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':iddisciplina', $iddisciplina);
-        $stmt->bindParam(':nome', $nome);
-        $stmt->bindParam(':idprofessor', $idprofessor);
-        $stmt->bindParam(':tipodeturma', $tipodeturma);
-        $stmt->execute();
-        return $stmt;
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-    }
-}
-
-        // Precisa conseguir deletar quando tiver alunos.
+                $checkIfExistsQuery = "SELECT COUNT(*) as count FROM turma WHERE nome = :nome AND idprofessor = :idprofessor AND iddisciplina = :iddisciplina";
+                $checkIfExistsStmt = $this->conn->prepare($checkIfExistsQuery);
+                $checkIfExistsStmt->bindParam(':nome', $nome);
+                $checkIfExistsStmt->bindParam(':idprofessor', $idprofessor);
+                $checkIfExistsStmt->bindParam(':iddisciplina', $iddisciplina);
+                $checkIfExistsStmt->execute();
+                $classExists = $checkIfExistsStmt->fetch(PDO::FETCH_ASSOC)['count'] > 0;
+        
+                if ($classExists) {
+                    $errorMessage = "Erro: Turma já existente.";
+                    header("Location: ../Template/turma.php?message=" . urlencode($errorMessage));
+                    exit();
+                }
+        
+                $sql = "INSERT INTO turma(iddisciplina, nome, idprofessor, tipodeturma, data_registro)
+                        VALUES(:iddisciplina, :nome, :idprofessor, :tipodeturma, now())";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bindParam(':iddisciplina', $iddisciplina);
+                $stmt->bindParam(':nome', $nome);
+                $stmt->bindParam(':idprofessor', $idprofessor);
+                $stmt->bindParam(':tipodeturma', $tipodeturma);
+                $stmt->execute();
+                return $stmt;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+            }
+        }
+        
         public function deletar($idturma){
             try{
                 $sql = "DELETE FROM turma
