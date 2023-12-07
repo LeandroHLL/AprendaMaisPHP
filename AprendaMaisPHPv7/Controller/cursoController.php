@@ -5,11 +5,13 @@ $objCurso = new Curso();
 if (isset($_POST['insert'])) {
     $nome = $_POST['txtNome'];
 
-    if ($objCurso->isCursoExists($nome)) {
+    if (empty($nome)) {
+        $responseMessage = "Erro: Nome do Curso é obrigatório.";
+    } elseif ($objCurso->isCursoExists($nome)) {
         $responseMessage = "Erro: Curso Já Existente.";
     } else {
         if ($objCurso->insert($nome)) {
-            $objCurso->redirect('../Template/curso.php');
+            $objCurso->redirect('../Template/curso.php?cadastrado=' . urlencode($nome));
         } else {
             $responseMessage = "Erro: Falha ao inserir o Curso.";
         }
