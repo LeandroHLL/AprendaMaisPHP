@@ -107,6 +107,7 @@
             placeholder="informe nome" 
             id="recipient-nome"
             name="nome" readOnly>
+            <p class="ml-2 pt-2">Essa ação apagará todas informações associadas ao mesmo</p>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
