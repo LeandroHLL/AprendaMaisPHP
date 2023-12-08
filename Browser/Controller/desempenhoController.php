@@ -60,8 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Fecha a conexão
         $conexao->close();
 
-        header("Location: ../../index.php");
-        exit();
+        header("Location: ../Template/turma.php");
     } else {
         echo "Erro: Nenhum arquivo enviado.";
     }
