@@ -1,4 +1,8 @@
 <?php
+/**
+ * @todo implementar a PSR4
+ * @link https://www.php-fig.org/psr/psr-4/
+ */
     require_once('conexao.php');
 
     class Turma{
@@ -9,6 +13,9 @@
             $this->conn = $dataBase->dbConnection();
         }
 
+        /**
+         * @todo Verificar o objetivo deste método. Está em uso?
+         */
         public function runQuery($sql){
             $stmt = $this->conn->prepare($sql);
             return $stmt;
@@ -63,10 +70,31 @@
         }
 
 
-        public function insert($nome,$tipodeturma,$idprofessor,$iddisciplina){
-            try{
-                $sql = "INSERT INTO turma(iddisciplina,nome,idprofessor,tipodeturma,data_registro)
-                VALUES(:iddisciplina,:nome,:idprofessor,:tipodeturma, now())";                
+        public function insert($nome, $tipodeturma, $idprofessor, $iddisciplina)
+        {
+            try {
+                if (empty($nome)) {
+                    $errorMessage = "Erro: Turma sem nome.";
+                    header("Location: ../Template/turma.php?message=" . urlencode($errorMessage));
+                    exit();
+                }
+        
+                $checkIfExistsQuery = "SELECT COUNT(*) as count FROM turma WHERE nome = :nome AND idprofessor = :idprofessor AND iddisciplina = :iddisciplina";
+                $checkIfExistsStmt = $this->conn->prepare($checkIfExistsQuery);
+                $checkIfExistsStmt->bindParam(':nome', $nome);
+                $checkIfExistsStmt->bindParam(':idprofessor', $idprofessor);
+                $checkIfExistsStmt->bindParam(':iddisciplina', $iddisciplina);
+                $checkIfExistsStmt->execute();
+                $classExists = $checkIfExistsStmt->fetch(PDO::FETCH_ASSOC)['count'] > 0;
+        
+                if ($classExists) {
+                    $errorMessage = "Erro: Turma já existente.";
+                    header("Location: ../Template/turma.php?message=" . urlencode($errorMessage));
+                    exit();
+                }
+        
+                $sql = "INSERT INTO turma(iddisciplina, nome, idprofessor, tipodeturma, data_registro)
+                        VALUES(:iddisciplina, :nome, :idprofessor, :tipodeturma, now())";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->bindParam(':iddisciplina', $iddisciplina);
                 $stmt->bindParam(':nome', $nome);
@@ -74,13 +102,11 @@
                 $stmt->bindParam(':tipodeturma', $tipodeturma);
                 $stmt->execute();
                 return $stmt;
-
-            }catch(PDOException $e){
+            } catch (PDOException $e) {
                 echo $e->getMessage();
             }
         }
-
-        // Precisa conseguir deletar quando tiver alunos.
+        
         public function deletar($idturma){
             try{
                 $sql = "DELETE FROM turma
