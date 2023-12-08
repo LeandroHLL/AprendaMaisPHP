@@ -17,6 +17,9 @@
         <a class="nav-link" href="aluno.php">Alunos</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="professor.php">Professores</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="curso.php">Cursos</a>
       </li>
       <li class="nav-item">
@@ -24,9 +27,6 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="turma.php">Turma</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="professor.php">Professores</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="analise.php">Análise</a>
