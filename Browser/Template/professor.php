@@ -131,6 +131,7 @@ if (isset($_GET['message'])) {
             placeholder="informe nome" 
             id="recipient-nome"
             name="nome" readOnly>
+            <p class="ml-2 pt-2">Não é possível excluir professores que possuem turma</p>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
