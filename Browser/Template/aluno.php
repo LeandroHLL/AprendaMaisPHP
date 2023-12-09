@@ -93,7 +93,11 @@ $alunos = $stmtAlunos->fetchAll(PDO::FETCH_ASSOC);
                     <th>Nome</th>
                     <th>Telefone</th>
                     <th>Email</th>
-                    <th>Ações</th>
+                    <?php
+                    if ($selectedTurma != 0 && $selectedTurma != 'todos') {
+                    echo"<th>Ações</th>";
+                    }
+                    ?>
                 </tr>
             </thead>
             <tbody>
@@ -104,7 +108,9 @@ $alunos = $stmtAlunos->fetchAll(PDO::FETCH_ASSOC);
                     echo "<td>{$aluno['nome']}</td>";
                     echo "<td>{$aluno['telefone']}</td>";
                     echo "<td>{$aluno['email']}</td>";
+                    if ($selectedTurma != 0 && $selectedTurma != 'todos') {
                     echo "<td><button class='btn btn-danger' onclick='excluirAluno(\"{$aluno['matricula']}\")'>Excluir</button></td>";
+                    }
                     echo "</tr>";
                 }
                 ?>
