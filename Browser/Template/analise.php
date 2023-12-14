@@ -32,8 +32,13 @@
   <p>Somente disponivéis turmas finalizadas</p>
   <p class="ml-2">
   <?php 
-        $query = "SELECT idturma,nome,tipodeturma FROM turma
-        where tipodeturma = 'F'";
+        $query = "SELECT t.idturma,t.nome,t.tipodeturma FROM turma as t
+        where tipodeturma = 'F'AND EXISTS (
+    SELECT 1
+    FROM desempenho_aluno_turma d
+    WHERE d.idturma = t.idturma
+      AND d.matricula IS NOT NULL
+  ); ";
         $stmt = $objTurmas->runQuery($query);
         $stmt->execute();
         $objTurmas = $stmt->fetchAll(PDO::FETCH_ASSOC);
