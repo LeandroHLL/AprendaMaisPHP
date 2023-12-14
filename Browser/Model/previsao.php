@@ -135,26 +135,24 @@ class Previsao
         $faltas = $this->getAllFaltas($iddisciplina);
         $modelo = $this->ajustarRegressaoLinear($faltas, $notas);
 
-
-        $resultados = "";
-
         foreach ($faltasParaPrever as $falta) {
             $previsaoNotas = $modelo['m'] * $falta + $modelo['b'];
-            $resultados .= "Previsão de notas para $falta faltas: " . $previsaoNotas . "\n";
 
 
             $this->inserirPrevisaoNoBanco($idturma, $falta, $previsaoNotas);
         }
-
-
-        return $resultados;
     }
 
     private function inserirPrevisaoNoBanco($idturma, $falta, $previsaoNotas)
     {
         try {
 
-            $sql = "UPDATE desempenho_aluno_turma SET previsoes = :previsaoNotas WHERE idturma = :idturma AND falta = :falta";
+            $sql = "UPDATE desempenho_aluno_turma
+            SET previsoes = CASE
+                               WHEN :previsaoNotas < 0 THEN 0
+                               ELSE :previsaoNotas
+                            END
+            WHERE idturma = :idturma AND falta = :falta";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':idturma', $idturma);
             $stmt->bindParam(':falta', $falta);
