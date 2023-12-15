@@ -39,6 +39,7 @@ $alunos = $stmtAlunos->fetchAll(PDO::FETCH_ASSOC);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aprenda Mais - Alunos</title>
+    <link rel="icon" type="image/x-icon" href="./img/Aprenda-Mais-logo.ico">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -93,7 +94,11 @@ $alunos = $stmtAlunos->fetchAll(PDO::FETCH_ASSOC);
                     <th>Nome</th>
                     <th>Telefone</th>
                     <th>Email</th>
-                    <th>Ações</th>
+                    <?php
+                    if ($selectedTurma != 0 && $selectedTurma != 'todos') {
+                    echo"<th>Ações</th>";
+                    }
+                    ?>
                 </tr>
             </thead>
             <tbody>
@@ -104,7 +109,9 @@ $alunos = $stmtAlunos->fetchAll(PDO::FETCH_ASSOC);
                     echo "<td>{$aluno['nome']}</td>";
                     echo "<td>{$aluno['telefone']}</td>";
                     echo "<td>{$aluno['email']}</td>";
+                    if ($selectedTurma != 0 && $selectedTurma != 'todos') {
                     echo "<td><button class='btn btn-danger' onclick='excluirAluno(\"{$aluno['matricula']}\")'>Excluir</button></td>";
+                    }
                     echo "</tr>";
                 }
                 ?>
