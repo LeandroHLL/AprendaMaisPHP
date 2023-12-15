@@ -9,9 +9,12 @@
 
   <!-- Navbar links -->
   <div class="collapse navbar-collapse" id="collapsibleNavbar">
-    <ul class="navbar-nav">
+    <ul class="navbar-nav"> 
       <li class="nav-item">
-        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../homepage/manual.html">Manual</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="aluno.php">Alunos</a>
