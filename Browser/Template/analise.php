@@ -22,6 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>Aprenda Mais - Análise</title>
+    <link rel="icon" type="image/x-icon" href="./img/Aprenda-Mais-logo.ico">
 </head>
 <body>
 <?php 
@@ -32,8 +33,13 @@
   <p>Somente disponivéis turmas finalizadas</p>
   <p class="ml-2">
   <?php 
-        $query = "SELECT idturma,nome,tipodeturma FROM turma
-        where tipodeturma = 'F'";
+        $query = "SELECT t.idturma,t.nome,t.tipodeturma FROM turma as t
+        where tipodeturma = 'F'AND EXISTS (
+    SELECT 1
+    FROM desempenho_aluno_turma d
+    WHERE d.idturma = t.idturma
+      AND d.matricula IS NOT NULL
+  ); ";
         $stmt = $objTurmas->runQuery($query);
         $stmt->execute();
         $objTurmas = $stmt->fetchAll(PDO::FETCH_ASSOC);

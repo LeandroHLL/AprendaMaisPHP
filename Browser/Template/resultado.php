@@ -17,6 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>Aprenda Mais - Ferramenta de Análise de Dados</title>
+    <link rel="icon" type="image/x-icon" href="./img/Aprenda-Mais-logo.ico">
 </head>
 <body>
 <?php 

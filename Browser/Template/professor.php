@@ -14,6 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>Aprenda Mais - Professores</title>
+    <link rel="icon" type="image/x-icon" href="./img/Aprenda-Mais-logo.ico">
 </head>
 <body>
 <?php 
@@ -131,7 +132,6 @@ if (isset($_GET['message'])) {
             placeholder="informe nome" 
             id="recipient-nome"
             name="nome" readOnly>
-            <p class="ml-2 pt-2">Não é possível excluir professores que possuem turma</p>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
