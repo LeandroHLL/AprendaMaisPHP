@@ -9,7 +9,7 @@
             $this->conn = null;
             try{
 
-                $this->conn = new PDO('mysql:host=localhost; dbname=aprendendoMaisPhp3; port=3306', $this->userName, $this->senha);
+                $this->conn = new PDO('mysql:host=localhost; dbname=aprendendoMaisPhp; port=3306', $this->userName, $this->senha);
 
                 $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);                
 

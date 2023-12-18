@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $dados_csv = array_map('str_getcsv', file($caminho_arquivo));
 
 
-        $conexao = new mysqli("localhost", "root", "", "aprendendomaisphp3");
+        $conexao = new mysqli("localhost", "root", "", "aprendendomaisphp");
 
 
         if ($conexao->connect_error) {
