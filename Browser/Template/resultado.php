@@ -49,13 +49,23 @@
             ?>
 
             <body>
-                <div class="container">
+                <style>
+                    .custom-box {
+                        border: 1px solid #ccc;
+                        padding: 15px;
+                        margin-bottom: 15px;
+                        border-radius: 5px;
+                        background-color: #f5f5f5;
+                        
+                    }
+                </style>
+                <div class="table table-bordered table-rounded">
                     <h4 class="text-center">Tuma Analisada: <?php echo ($objTurma['nome']); ?> </h4>
                     <h1 class="text-center">Resultado da Análise: <?php echo ($objTurma['percentualregresso']); ?></h1>
                     <h5 class="text-center">Disciplina : <?php echo ($objDisciplina['nome']); ?></h5>
 
                     <div class="row mt-2">
-                        <div class="text-center mt-2 col-md-4">
+                        <div class="text-center mt-2 col-md-4 custom-box">
                             <label for="resultados-negativos"><strong>Negativo ou Positivo:</strong></label>
                             <ul id="resultados-negativos" class="list-group">
                                 <?php
@@ -83,7 +93,7 @@
                                 ?>
                             </ul>
                         </div>
-                        <div class="text-center mt-2 col-md-4">
+                        <div class="text-center mt-2 col-md-4 custom-box">
                             <label for="resultados-negativos"><strong>Quanto mais próximo de 1</strong></label>
                             <ul id="resultados-negativos" class="list-group">
                                 <?php
@@ -119,7 +129,7 @@
                                 ?>
                             </ul>
                         </div>
-                        <div class="text-center mt-2 col-md-4">
+                        <div class="text-center mt-2 col-md-4 custom-box">
                             <label for="resultados-negativos"><strong>Interpretações</strong></label>
                             <ul id="resultados-negativos" class="list-group">
                                 <?php
@@ -154,75 +164,80 @@
             </body>
             </table>
         </div>
+        <style>
+            .table-rounded {
+                border-radius: 10px;
+                overflow: hidden;
+            }
+        </style>
 
         <div class="text-center mt-4">
-            <canvas id="scatterChart" width="400" height="325"></canvas>
+            <canvas id="scatterChart" width="400" height="308"></canvas>
         </div>
 
 
         <script>
-
-    var notas = <?php echo json_encode($notas); ?>;
-    var faltas = <?php echo json_encode($faltas); ?>;
-
-
-    var ctx = document.getElementById('scatterChart').getContext('2d');
+            var notas = <?php echo json_encode($notas); ?>;
+            var faltas = <?php echo json_encode($faltas); ?>;
 
 
-    var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    var chartWidth = width > 768 ? 600 : width - 50; 
+            var ctx = document.getElementById('scatterChart').getContext('2d');
 
-    var scatterChart = new Chart(ctx, {
-        type: 'scatter',
-        data: {
-            datasets: [{
-                label: 'Notas e Faltas',
-                data: Array.from({
-                    length: notas.length
-                }, (_, i) => ({
-                    x: notas[i],
-                    y: faltas[i]
-                })),
-                backgroundColor: 'rgba(75, 192, 192, 0.5)', 
-                pointRadius: 5,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    type: 'linear',
-                    position: 'bottom',
-                    title: {
-                        display: true,
-                        text: 'Notas'
-                    }
+
+            var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            var chartWidth = width > 768 ? 600 : width - 50;
+
+            var scatterChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Notas e Faltas',
+                        data: Array.from({
+                            length: notas.length
+                        }, (_, i) => ({
+                            x: notas[i],
+                            y: faltas[i]
+                        })),
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        pointRadius: 5,
+                    }]
                 },
-                y: {
-                    type: 'linear',
-                    position: 'left',
-                    title: {
-                        display: true,
-                        text: 'Faltas'
-                    }
-                }
-            },
-            plugins: {
-                zoom: {
-                    pan: {
-                        enabled: true,
-                        mode: 'xy',
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Notas'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Faltas'
+                            }
+                        }
                     },
-                    zoom: {
-                        enabled: true,
-                        mode: 'xy',
+                    plugins: {
+                        zoom: {
+                            pan: {
+                                enabled: true,
+                                mode: 'xy',
+                            },
+                            zoom: {
+                                enabled: true,
+                                mode: 'xy',
+                            }
+                        }
                     }
                 }
-            }
-        }
-    });
-</script>
+            });
+        </script>
     </body>
 
     </html>
