@@ -17,8 +17,9 @@
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Adicione a biblioteca Chart.js -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+
         <title>Aprenda Mais - Ferramenta de Análise de Dados</title>
         <link rel="icon" type="image/x-icon" href="./img/Aprenda-Mais-logo.ico">
     </head>
@@ -39,7 +40,6 @@
             $objTurma = $stmt->fetch(PDO::FETCH_ASSOC);
             $objDisciplina = $objDisciplina->getDisciplinaByid($objTurma['iddisciplina']);
 
-            // Utilize a conexão direta para obter os dados de desempenho
             $queryDesempenho = "SELECT nota, falta FROM desempenho_aluno_turma WHERE idturma = $idTurma";
             $stmtDesempenho = $connection->query($queryDesempenho);
             $dadosDesempenho = $stmtDesempenho->fetchAll(PDO::FETCH_ASSOC);
@@ -135,8 +135,8 @@
                                 ?>
                                     <li class="list-group-item">
                                         <p>Podemos analisar os dados da seguinte forma:
-                                            Os alunos que faltaram menos tendem a obter notas mais altas,
-                                            e aqueles que faltaram mais frequentemente tendem a obter notas mais baixas.</p>
+                                            Os alunos que faltaram mais tendem a obter notas menores,
+                                            e aqueles que faltaram menos frequentemente tendem a obter notas mais altas.</p>
                                     </li>
                                 <?php
                                 } else {
@@ -161,16 +161,16 @@
 
 
         <script>
-    // Dados para o gráfico
+
     var notas = <?php echo json_encode($notas); ?>;
     var faltas = <?php echo json_encode($faltas); ?>;
 
-    // Configuração do gráfico de dispersão
+
     var ctx = document.getElementById('scatterChart').getContext('2d');
 
-    // Definindo a largura do gráfico em relação à largura da janela
+
     var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    var chartWidth = width > 768 ? 600 : width - 50; // Ajuste de largura para telas menores
+    var chartWidth = width > 768 ? 600 : width - 50; 
 
     var scatterChart = new Chart(ctx, {
         type: 'scatter',
@@ -183,13 +183,13 @@
                     x: notas[i],
                     y: faltas[i]
                 })),
-                backgroundColor: 'rgba(75, 192, 192, 0.5)', // Cor de fundo
-                pointRadius: 5, // Tamanho dos pontos
+                backgroundColor: 'rgba(75, 192, 192, 0.5)', 
+                pointRadius: 5,
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Permite ao gráfico ignorar o aspect ratio
+            maintainAspectRatio: false,
             scales: {
                 x: {
                     type: 'linear',
@@ -205,6 +205,18 @@
                     title: {
                         display: true,
                         text: 'Faltas'
+                    }
+                }
+            },
+            plugins: {
+                zoom: {
+                    pan: {
+                        enabled: true,
+                        mode: 'xy',
+                    },
+                    zoom: {
+                        enabled: true,
+                        mode: 'xy',
                     }
                 }
             }

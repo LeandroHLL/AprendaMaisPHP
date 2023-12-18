@@ -1,5 +1,5 @@
-create database aprendendomaisphp3;
-use aprendendomaisphp3;
+create database aprendendomaisphp;
+use aprendendomaisphp;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,7 +33,7 @@ CREATE TABLE `aluno` (
 --
 
 INSERT INTO `aluno` (`matricula`, `nome`, `telefone`, `email`) VALUES
-('MAT001', 'Nome Aluno 1', '123456789', 'aluno1@example.com'),
+('MAT001','Maria Silva','71 91234-5678','maria.silva@gmail.com'),
 ('MAT002', 'João Santos', '71 98765-4321', 'joao.santos@gmail.com'),
 ('MAT003', 'Ana Ferreira', '71 97654-3210', 'ana.ferreira@gmail.com'),
 ('MAT004', 'Pedro Oliveira', '71 94321-8765', 'pedro.oliveira@gmail.com'),
