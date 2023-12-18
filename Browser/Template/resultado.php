@@ -30,12 +30,22 @@
         <div class="container">
             <thead></thead>
             <?php
-            $query = "SELECT nome, percentualregresso,iddisciplina FROM turma where idturma = {$_SESSION['idTurma']}";
-            $stmt = $objTurma->runQuery($query);
-            $stmt->execute();
+            $idTurma = $_SESSION['idTurma'];
+
+            $connection = new PDO("mysql:host=localhost;dbname=aprendendoMaisPhp4", "root", "");
+
+            $query = "SELECT nome, percentualregresso, iddisciplina FROM turma WHERE idturma = {$_SESSION['idTurma']}";
+            $stmt = $connection->query($query);
             $objTurma = $stmt->fetch(PDO::FETCH_ASSOC);
             $objDisciplina = $objDisciplina->getDisciplinaByid($objTurma['iddisciplina']);
-            
+
+            // Utilize a conexão direta para obter os dados de desempenho
+            $queryDesempenho = "SELECT nota, falta FROM desempenho_aluno_turma WHERE idturma = $idTurma";
+            $stmtDesempenho = $connection->query($queryDesempenho);
+            $dadosDesempenho = $stmtDesempenho->fetchAll(PDO::FETCH_ASSOC);
+
+            $notas = array_column($dadosDesempenho, 'nota');
+            $faltas = array_column($dadosDesempenho, 'falta');
             ?>
 
             <body>
@@ -43,11 +53,11 @@
                     <h4 class="text-center">Tuma Analisada: <?php echo ($objTurma['nome']); ?> </h4>
                     <h1 class="text-center">Resultado da Análise: <?php echo ($objTurma['percentualregresso']); ?></h1>
                     <h5 class="text-center">Disciplina : <?php echo ($objDisciplina['nome']); ?></h5>
-    //
+                    //
                     <div class="text-center mt-4">
-                        <canvas id="scatterChart" width="400" height="200"></canvas>
+                        <canvas id="scatterChart" width="200" height="100"></canvas>
                     </div>
-    //
+                    //
                     <div class="row mt-2">
                         <div class="text-center mt-2 col-md-4">
                             <label for="resultados-negativos"><strong>Negativo ou Positivo:</strong></label>
@@ -148,46 +158,46 @@
             </body>
             </table>
         </div>
-        
-        <script>
-            // Dados para o gráfico
-            var notas = [/* ... array de notas ... */];
-            var faltas = [/* ... array de faltas ... */];
 
-            // Configuração do gráfico de dispersão
-            var ctx = document.getElementById('scatterChart').getContext('2d');
-            var scatterChart = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Notas e Faltas',
-                        data: Array.from({ length: notas.length }, (_, i) => ({ x: notas[i], y: faltas[i] })),
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)', // Cor de fundo
-                        pointRadius: 5, // Tamanho dos pontos
-                    }]
+        <script>
+    // Dados para o gráfico
+    var notas = <?php echo json_encode($notas); ?>;
+    var faltas = <?php echo json_encode($faltas); ?>;
+
+    // Configuração do gráfico de dispersão
+    var ctx = document.getElementById('scatterChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Notas e Faltas',
+                data: Array.from({ length: notas.length }, (_, i) => ({ x: notas[i], y: faltas[i] })),
+                backgroundColor: 'rgba(75, 192, 192, 0.5)', // Cor de fundo
+                pointRadius: 5, // Tamanho dos pontos
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    title: {
+                        display: true,
+                        text: 'Notas'
+                    }
                 },
-                options: {
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: {
-                                display: true,
-                                text: 'Notas'
-                            }
-                        },
-                        y: {
-                            type: 'linear',
-                            position: 'left',
-                            title: {
-                                display: true,
-                                text: 'Faltas'
-                            }
-                        }
+                y: {
+                    type: 'linear',
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Faltas'
                     }
                 }
-            });
-        </script>
+            }
+        }
+    });
+</script>
     </body>
 
     </html>
