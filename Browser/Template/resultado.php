@@ -53,11 +53,7 @@
                     <h4 class="text-center">Tuma Analisada: <?php echo ($objTurma['nome']); ?> </h4>
                     <h1 class="text-center">Resultado da Análise: <?php echo ($objTurma['percentualregresso']); ?></h1>
                     <h5 class="text-center">Disciplina : <?php echo ($objDisciplina['nome']); ?></h5>
-                    //
-                    <div class="text-center mt-4">
-                        <canvas id="scatterChart" width="200" height="100"></canvas>
-                    </div>
-                    //
+
                     <div class="row mt-2">
                         <div class="text-center mt-2 col-md-4">
                             <label for="resultados-negativos"><strong>Negativo ou Positivo:</strong></label>
@@ -159,6 +155,11 @@
             </table>
         </div>
 
+        <div class="text-center mt-4">
+            <canvas id="scatterChart" width="400" height="325"></canvas>
+        </div>
+
+
         <script>
     // Dados para o gráfico
     var notas = <?php echo json_encode($notas); ?>;
@@ -166,17 +167,29 @@
 
     // Configuração do gráfico de dispersão
     var ctx = document.getElementById('scatterChart').getContext('2d');
+
+    // Definindo a largura do gráfico em relação à largura da janela
+    var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    var chartWidth = width > 768 ? 600 : width - 50; // Ajuste de largura para telas menores
+
     var scatterChart = new Chart(ctx, {
         type: 'scatter',
         data: {
             datasets: [{
                 label: 'Notas e Faltas',
-                data: Array.from({ length: notas.length }, (_, i) => ({ x: notas[i], y: faltas[i] })),
+                data: Array.from({
+                    length: notas.length
+                }, (_, i) => ({
+                    x: notas[i],
+                    y: faltas[i]
+                })),
                 backgroundColor: 'rgba(75, 192, 192, 0.5)', // Cor de fundo
                 pointRadius: 5, // Tamanho dos pontos
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false, // Permite ao gráfico ignorar o aspect ratio
             scales: {
                 x: {
                     type: 'linear',
