@@ -18,8 +18,6 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
-
         <title>Aprenda Mais - Ferramenta de Análise de Dados</title>
         <link rel="icon" type="image/x-icon" href="./img/Aprenda-Mais-logo.ico">
     </head>
@@ -33,7 +31,7 @@
             <?php
             $idTurma = $_SESSION['idTurma'];
 
-            $connection = new PDO("mysql:host=localhost;dbname=aprendendoMaisPhp4", "root", "");
+            $connection = new PDO("mysql:host=localhost;dbname=aprendendoMaisPhp", "root", "");
 
             $query = "SELECT nome, percentualregresso, iddisciplina FROM turma WHERE idturma = {$_SESSION['idTurma']}";
             $stmt = $connection->query($query);
@@ -56,7 +54,7 @@
                         margin-bottom: 15px;
                         border-radius: 5px;
                         background-color: #f5f5f5;
-                        
+
                     }
                 </style>
                 <div class="table table-bordered table-rounded">
@@ -97,7 +95,7 @@
                             <label for="resultados-negativos"><strong>Quanto mais próximo de 1</strong></label>
                             <ul id="resultados-negativos" class="list-group">
                                 <?php
-                                if ($objTurma['percentualregresso'] >= 0.7) {
+                                if ($objTurma['percentualregresso'] < 0 && $objTurma['percentualregresso'] >= -1) {
                                 ?>
                                     <li class="list-group-item">O valor obtido é
                                         <strong><?php echo ($objTurma['percentualregresso']); ?></strong>
@@ -116,13 +114,6 @@
                                     <li class="list-group-item">O valor obtido é
                                         <strong><?php echo ($objTurma['percentualregresso']); ?></strong>
                                         <p>O fato de o coeficiente de correlação estar entre 0 e 0.4 indica uma correlação fraca.</p>
-                                    </li>
-                                <?php
-                                } else {
-                                ?>
-                                    <li class="list-group-item">O valor obtido é
-                                        <strong><?php echo ($objTurma['percentualregresso']); ?></strong>
-                                        <p>O fato de o coeficiente de correlação estar próximo de 0 indica ausência de correlação.</p>
                                     </li>
                                 <?php
                                 }
@@ -158,6 +149,9 @@
                                 <?php
                                 }
                                 ?>
+                                <li class="list-group-item">
+                                    <p>Vale ressaltar, que apesar da correlação entre notas e faltas ser forte. Outros fatores podem estar envolvidos e influenciar essas variáveis.</p>
+                                </li>
                             </ul>
                         </div>
 
