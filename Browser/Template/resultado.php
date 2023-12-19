@@ -18,6 +18,7 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
         <title>Aprenda Mais - Ferramenta de Análise de Dados</title>
         <link rel="icon" type="image/x-icon" href="./img/Aprenda-Mais-logo.ico">
     </head>
@@ -182,55 +183,60 @@
             var chartWidth = width > 768 ? 600 : width - 50;
 
             var scatterChart = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Notas e Faltas',
-                        data: Array.from({
-                            length: notas.length
-                        }, (_, i) => ({
-                            x: notas[i],
-                            y: faltas[i]
-                        })),
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                        pointRadius: 5,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: {
-                                display: true,
-                                text: 'Notas'
-                            }
-                        },
-                        y: {
-                            type: 'linear',
-                            position: 'left',
-                            title: {
-                                display: true,
-                                text: 'Faltas'
-                            }
-                        }
-                    },
-                    plugins: {
-                        zoom: {
-                            pan: {
-                                enabled: true,
-                                mode: 'xy',
-                            },
-                            zoom: {
-                                enabled: true,
-                                mode: 'xy',
-                            }
-                        }
-                    }
+    type: 'scatter',
+    data: {
+        datasets: [{
+            label: 'Notas e Faltas',
+            data: Array.from({
+                length: notas.length
+            }, (_, i) => ({
+                x: notas[i],
+                y: faltas[i]
+            })),
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            pointRadius: 5,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                type: 'linear',
+                position: 'bottom',
+                title: {
+                    display: true,
+                    text: 'Notas'
                 }
-            });
+            },
+            y: {
+                type: 'linear',
+                position: 'left',
+                title: {
+                    display: true,
+                    text: 'Faltas'
+                }
+            }
+        },
+        plugins: {
+            zoom: {
+                pan: {
+                    enabled: true,
+                    mode: 'xy',
+                },
+                zoom: {
+                    wheel: {
+                        enabled: true,
+                    },
+                    pinch: {
+                        enabled: true,
+                    },
+                    mode: 'xy',
+                }
+            }
+        }
+    }
+});
         </script>
     </body>
 
